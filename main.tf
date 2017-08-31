@@ -6,32 +6,32 @@
 # }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.resource_group}"
+  name     = "${var.prefix}-rg"
   location = "${var.location}"
 }
 
 resource "azurerm_sql_database" "db" {
-  name                             = "${var.db_name}"
+  name                             = "${var.prefix}-db"
   resource_group_name              = "${azurerm_resource_group.rg.name}"
   location                         = "${var.location}"
   edition                          = "${var.db_edition}"
-  collation                        = "SQL_Latin1_General_CP1_CI_AS"
+  collation                        = "${var.collation}"
   server_name                      = "${azurerm_sql_server.server.name}"
   create_mode                      = "Default"
-  requested_service_objective_name = "Basic"
+  requested_service_objective_name = "${var.service_objective_name}"
 }
 
 resource "azurerm_sql_server" "server" {
-  name                         = "${var.resource_group}-sqlsvr"
+  name                         = "${var.prefix}-sqlsvr"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   location                     = "${var.location}"
-  version                      = "12.0"
+  version                      = "${var.server_version}"
   administrator_login          = "${var.sql_admin_username}"
   administrator_login_password = "${var.sql_password}"
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
-  name                = "firewallrules"
+  name                = "${var.prefix}-firewallrules"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   server_name         = "${azurerm_sql_server.server.name}"
   start_ip_address    = "${var.start_ip_address}"
