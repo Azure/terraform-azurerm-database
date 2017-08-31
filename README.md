@@ -1,7 +1,7 @@
-Create a SQL Server Database in Azure
+Create an Azure SQL Database
 ==============================================================================
 
-This Terraform create a basic SQL Server Database in Azure.
+This Terraform create a basic Azure SQL Database.
 
 Module Input Variables 
 ----------------------
