@@ -1,6 +1,6 @@
-variable "prefix" {
-  description = "Default prefix to use with your resource names."
-  default = "myapp"
+variable "resource_group_name" {
+  description = "Default resource group name that the database will be created in."
+  default = "myapp-rg"
 }
 
 variable "location" {

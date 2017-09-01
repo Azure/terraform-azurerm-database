@@ -6,7 +6,7 @@ This Terraform create a basic Azure SQL Database.
 Module Input Variables 
 ----------------------
 
-- `prefix` - The prefix that will be used for all resources that will be created by this module.
+- `resource_group_name` - The name of the resource group where the database will be created.
 - `location` - The Azure location where the resources will be created.
 - `server_version` - The version for the database server. Default is 12.0. Valid values are: 2.0 (for v11 server) and 12.0 (for v12 server).
 - `db_name` - The name of the database that will be created.
@@ -24,7 +24,8 @@ Usage
 
 ```hcl
 module "sql-database" {
-  source              = "terraform-azurerm-database/"
+  source              = ""Azure/database/azurerm""
+  resource_group_name = "myapp"
   prefix              = "myapp"
   location            = "westus"
   db_name             = "mydatabase"
