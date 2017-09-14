@@ -26,7 +26,6 @@ Usage
 module "sql-database" {
   source              = "Azure/database/azurerm"
   resource_group_name = "myapp"
-  prefix              = "myapp"
   location            = "westus"
   db_name             = "mydatabase"
   sql_admin_username  = "mradministrator"
