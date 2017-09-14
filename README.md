@@ -1,7 +1,7 @@
 Create an Azure SQL Database
 ==============================================================================
 
-This Terraform create a basic Azure SQL Database.
+This Terraform module creates a basic Azure SQL Database.
 
 Module Input Variables 
 ----------------------
