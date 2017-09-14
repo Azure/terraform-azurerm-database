@@ -24,7 +24,7 @@ Usage
 
 ```hcl
 module "sql-database" {
-  source              = ""Azure/database/azurerm""
+  source              = "Azure/database/azurerm"
   resource_group_name = "myapp"
   prefix              = "myapp"
   location            = "westus"
