@@ -19,6 +19,7 @@ resource "azurerm_sql_database" "db" {
   server_name                      = "${azurerm_sql_server.server.name}"
   create_mode                      = "Default"
   requested_service_objective_name = "${var.service_objective_name}"
+  tags                             = "${var.tags}"
 }
 
 resource "azurerm_sql_server" "server" {
@@ -28,6 +29,7 @@ resource "azurerm_sql_server" "server" {
   version                      = "${var.server_version}"
   administrator_login          = "${var.sql_admin_username}"
   administrator_login_password = "${var.sql_password}"
+  tags                         = "${var.tags}"
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
