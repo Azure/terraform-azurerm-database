@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_sql_database" "db" {
-  name                             = "acctsqldb"
+  name                             = "${var.db_name}"
   resource_group_name              = "${azurerm_resource_group.rg.name}"
   location                         = "${var.location}"
   edition                          = "${var.db_edition}"
@@ -23,7 +23,7 @@ resource "azurerm_sql_database" "db" {
 }
 
 resource "azurerm_sql_server" "server" {
-  name                         = "acctsqlsvr"
+  name                         = "${var.db_name}-sqlsvr"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   location                     = "${var.location}"
   version                      = "${var.server_version}"
@@ -33,7 +33,7 @@ resource "azurerm_sql_server" "server" {
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
-  name                = "acctfirewallrules"
+  name                = "${var.db_name}-fwrules"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   server_name         = "${azurerm_sql_server.server.name}"
   start_ip_address    = "${var.start_ip_address}"
