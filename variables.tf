@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "Default resource group name that the database will be created in."
-  default = "myapp-rg"
+  default     = "myapp-rg"
 }
 
 variable "location" {
@@ -23,12 +23,12 @@ variable "db_edition" {
 
 variable "service_objective_name" {
   description = "The performance level for the database. For the list of acceptable values, see https://docs.microsoft.com/en-gb/azure/sql-database/sql-database-service-tiers. Default is Basic."
-  default     = "Basic"  
+  default     = "Basic"
 }
 
 variable "collation" {
   description = "The collation for the database. Default is SQL_Latin1_General_CP1_CI_AS"
-  default     = "SQL_Latin1_General_CP1_CI_AS"  
+  default     = "SQL_Latin1_General_CP1_CI_AS"
 }
 
 variable "sql_admin_username" {
@@ -41,17 +41,18 @@ variable "sql_password" {
 
 variable "start_ip_address" {
   description = "Defines the start IP address used in your database firewall rule."
-  default    = "0.0.0.0"
+  default     = "0.0.0.0"
 }
 
 variable "end_ip_address" {
   description = "Defines the end IP address used in your database firewall rule."
-  default    = "0.0.0.0"
+  default     = "0.0.0.0"
 }
 
 variable "tags" {
   description = "The tags to associate with your network and subnets."
-  type = "map"
+  type        = "map"
+
   default = {
     tag1 = ""
     tag2 = ""
