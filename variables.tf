@@ -45,7 +45,7 @@ variable "sql_password" {
 
 variable "firewall_rule_name" {
   description = "The name of the firewall rule to be created."
-  default = "acctfirewallrules"
+  default     = "acctfirewallrules"
 }
 
 variable "start_ip_address" {
