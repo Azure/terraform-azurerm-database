@@ -12,6 +12,10 @@ variable "server_version" {
   default     = "12.0"
 }
 
+variable "server_name" {
+  description = "The name of the server to be created."
+}
+
 variable "db_name" {
   description = "The name of the database to be created."
 }

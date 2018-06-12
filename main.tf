@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_sql_database" "db" {
-  name                             = "acctsqldb"
+  name                             = "${var.db_name}"
   resource_group_name              = "${azurerm_resource_group.rg.name}"
   location                         = "${var.location}"
   edition                          = "${var.db_edition}"
@@ -23,7 +23,7 @@ resource "azurerm_sql_database" "db" {
 }
 
 resource "azurerm_sql_server" "server" {
-  name                         = "acctsqlsvr"
+  name                         = "${var.server_name}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   location                     = "${var.location}"
   version                      = "${var.server_version}"
