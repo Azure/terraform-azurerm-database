@@ -14,6 +14,7 @@ variable "server_version" {
 
 variable "server_name" {
   description = "The name of the server to be created."
+  default     = "acctsqlsvr"
 }
 
 variable "db_name" {
