@@ -15,6 +15,7 @@ module "sql-database" {
   resource_group_name = "myapp"
   location            = "westus"
   db_name             = "mydatabase"
+  server_name         = "server12345"
   sql_admin_username  = "mradministrator"
   sql_password        = "P@ssw0rd12345!"
 

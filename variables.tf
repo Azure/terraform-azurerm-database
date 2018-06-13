@@ -12,6 +12,11 @@ variable "server_version" {
   default     = "12.0"
 }
 
+variable "server_name" {
+  description = "The name of the server to be created."
+  default     = "acctsqlsvr"
+}
+
 variable "db_name" {
   description = "The name of the database to be created."
 }
@@ -37,6 +42,11 @@ variable "sql_admin_username" {
 
 variable "sql_password" {
   description = "The administrator password of the SQL Server."
+}
+
+variable "firewall_rule_name" {
+  description = "The name of the firewall rule to be created."
+  default     = "acctfirewallrules"
 }
 
 variable "start_ip_address" {
