@@ -16,6 +16,9 @@ namespace :static do
   task :format do
     format_tf
   end
+end
+
+namespace :integration do
   task :test do
     success = system ("go test -v terratest/sql/terraform_database_example_test.go terratest/sql/database_functions.go")
     if not success 
@@ -26,7 +29,7 @@ end
 
 task :prereqs => []
 
-task :validate => [ 'static:style', 'static:lint', 'static:test']
+task :validate => [ 'static:style', 'static:lint' ]
 
 task :format => [ 'static:format' ]
 
@@ -34,8 +37,8 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => []
+task :e2e => [ 'integration:test' ]
 
 task :default => [ 'build' ]
 
-task :full => [ 'build', 'unit', 'e2e']
+task :full => [ 'build', 'unit', 'e2e' ]
