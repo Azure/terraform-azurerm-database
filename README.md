@@ -2,15 +2,11 @@
 
 [![Build Status](https://travis-ci.org/foreverXZC/terraform-azurerm-database.svg?branch=master)](https://travis-ci.org/foreverXZC/terraform-azurerm-database)
 
-Create an Azure SQL Database
-
-==============================================================================
+## Create an Azure SQL Database
 
 This Terraform module creates a basic Azure SQL Database.
 
-Usage
-
------
+## Usage
 
 ```hcl
 module "sql-database" {
@@ -29,9 +25,7 @@ module "sql-database" {
 }
 ```
 
-Test
-
------
+## Test
 
 ### Configurations
 
@@ -87,7 +81,6 @@ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-
 docker run -t azure-database-module rake full
 ```
 
-Authors
+## Authors
 
-=======
 Originally created by [James Earle](http://github.com/JamesEarle)
