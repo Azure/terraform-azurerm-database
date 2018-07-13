@@ -18,7 +18,7 @@ This folder only includes one file. First, the go test file uses terraform datab
 
 1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`.
 
-1. Direct to folder [database](/database/database) and run `terraform init`.
+1. Direct to folder [database](/terratest/database) and run `terraform init`.
 
 1. Run `terraform apply`.
 
@@ -34,7 +34,7 @@ This folder only includes one file. First, the go test file uses terraform datab
 
 1. Install [Golang](https://golang.org/) and make sure this code is checked out into your `GOPATH`.
 
-1. Direct to folder [sql](/database/sql) and make sure all packages are installed, such as executing `go get github.com/gruntwork-io/terratest/modules/terraform`, etc.
+1. Direct to folder [sql](/terratest/sql) and make sure all packages are installed, such as executing `go get github.com/gruntwork-io/terratest/modules/terraform`, etc.
 
 1. Run `go test`.
 

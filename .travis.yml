@@ -13,7 +13,7 @@ services:
   - docker
 
 env:
-  - TERRAFORM_VERSION=0.11.1 IMAGE_NAME=terraform-azure-database-module
+  - TERRAFORM_VERSION=0.11.1 IMAGE_NAME=azure-database-module
 
 jobs:
   include:
@@ -21,5 +21,4 @@ jobs:
       install: true
       script:
       - docker build --build-arg BUILD_TERRAFORM_VERSION=${TERRAFORM_VERSION} -t ${IMAGE_NAME} .
-      - docker run ${IMAGE_NAME} rake build
-      
+      - docker run ${IMAGE_NAME} rake full
