@@ -1,6 +1,6 @@
 # terraform-azurerm-database
 
-[![Build Status](https://travis-ci.org/Azure/terraform-azurerm-database.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-database)
+[![Build Status](https://travis-ci.org/foreverXZC/terraform-azurerm-database.svg?branch=master)](https://travis-ci.org/foreverXZC/terraform-azurerm-database)
 
 Create an Azure SQL Database
 
@@ -33,21 +33,21 @@ Test
 
 -----
 
-## Configurations
+### Configurations
 
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
 
 We provide 2 ways to build, run, and test module on local dev box:
 
-## Native(Mac/Linux)
+### Native(Mac/Linux)
 
-### Prerequisites
+#### Prerequisites
 
 - [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
 - [Bundler **(~> 1.15)**](https://bundler.io/)
 - [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
 
-### Environment setup
+#### Environment setup
 
 We provide simple script to quickly set up module development environment:
 
@@ -56,7 +56,7 @@ We provide simple script to quickly set up module development environment:
 curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
 ```
 
-### Run test
+#### Run test
 
 Then simply run it in local shell:
 
@@ -67,21 +67,21 @@ rake build
 rake e2e
 ```
 
-## Docker
+### Docker
 
 We provide Dockerfile to build and run module development environment locally:
 
-### Prerequisites (Docker)
+#### Prerequisites (Docker)
 
 - [Docker](https://www.docker.com/community-edition#/download)
 
-### Build the image
+#### Build the image
 
 ```sh
 docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-database-module .
 ```
 
-### Run test (Docker)
+#### Run test (Docker)
 
 ```sh
 docker run -t azure-database-module rake full
