@@ -17,17 +17,17 @@ type DBConfig struct {
 	database string
 }
 
-// Connect to the database using database configuration and database type, i.e. mssql, and then return the database. If there's any error, fail the test.
-func dbConnection(t *testing.T, dbType string, dbConfig DBConfig) *sql.DB {
-	db, err := dbConnectionE(t, dbType, dbConfig)
+// DBConnection connects to the database using database configuration and database type, i.e. mssql, and then return the database. If there's any error, fail the test.
+func DBConnection(t *testing.T, dbType string, dbConfig DBConfig) *sql.DB {
+	db, err := DBConnectionE(t, dbType, dbConfig)
 	if err != nil {
 		t.Fatal(err)
 	}
 	return db
 }
 
-// Connect to the database using database configuration and database type, i.e. mssql. Return the database or an error.
-func dbConnectionE(t *testing.T, dbType string, dbConfig DBConfig) (*sql.DB, error) {
+// DBConnectionE connects to the database using database configuration and database type, i.e. mssql. Return the database or an error.
+func DBConnectionE(t *testing.T, dbType string, dbConfig DBConfig) (*sql.DB, error) {
 	config := fmt.Sprintf("server = %s; user id = %s; password = %s; database = %s", dbConfig.server, dbConfig.user, dbConfig.password, dbConfig.database)
 	db, err := sql.Open(dbType, config)
 	if err != nil {
@@ -36,16 +36,16 @@ func dbConnectionE(t *testing.T, dbType string, dbConfig DBConfig) (*sql.DB, err
 	return db, nil
 }
 
-// Execute specific SQL commands, i.e. insertion. If there's any error, fail the test.
-func dbExecution(t *testing.T, db *sql.DB, command string) {
-	_, err := dbExecutionE(t, db, command)
+// DBExecution executes specific SQL commands, i.e. insertion. If there's any error, fail the test.
+func DBExecution(t *testing.T, db *sql.DB, command string) {
+	_, err := DBExecutionE(t, db, command)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-// Execute specific SQL commands, i.e. insertion. Return the result or an error.
-func dbExecutionE(t *testing.T, db *sql.DB, command string) (sql.Result, error) {
+// DBExecutionE executes specific SQL commands, i.e. insertion. Return the result or an error.
+func DBExecutionE(t *testing.T, db *sql.DB, command string) (sql.Result, error) {
 	result, err := db.Exec(command)
 	if err != nil {
 		return nil, err
@@ -53,17 +53,17 @@ func dbExecutionE(t *testing.T, db *sql.DB, command string) (sql.Result, error) 
 	return result, nil
 }
 
-// Query from database, i.e. selection, and then return the result. If there's any error, fail the test.
-func dbQuery(t *testing.T, db *sql.DB, command string) *sql.Rows {
-	rows, err := dbQueryE(t, db, command)
+// DBQuery queries from database, i.e. selection, and then return the result. If there's any error, fail the test.
+func DBQuery(t *testing.T, db *sql.DB, command string) *sql.Rows {
+	rows, err := DBQueryE(t, db, command)
 	if err != nil {
 		t.Fatal(err)
 	}
 	return rows
 }
 
-// Query from database, i.e. selection. Return the result or an error.
-func dbQueryE(t *testing.T, db *sql.DB, command string) (*sql.Rows, error) {
+// DBQueryE queries from database, i.e. selection. Return the result or an error.
+func DBQueryE(t *testing.T, db *sql.DB, command string) (*sql.Rows, error) {
 	rows, err := db.Query(command)
 	if err != nil {
 		return nil, err
@@ -71,37 +71,57 @@ func dbQueryE(t *testing.T, db *sql.DB, command string) (*sql.Rows, error) {
 	return rows, nil
 }
 
-// Query from database and validate whether the result meets the requirement. If there's any error, fail the test.
-func dbQueryWithValidation(t *testing.T, db *sql.DB, command string, expected string) {
-	err := dbQueryWithValidationE(t, db, command, expected)
+// DBQueryWithValidation queries from database and validate whether the result is the same as expected text. If there's any error, fail the test.
+func DBQueryWithValidation(t *testing.T, db *sql.DB, command string, expected string) {
+	err := DBQueryWithValidationE(t, db, command, expected)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-// Query from database and validate whether the result meets the requirement. If not, return an error.
-func dbQueryWithValidationE(t *testing.T, db *sql.DB, command string, expected string) error {
-	rows := dbQuery(t, db, command)
-	var name string
-	for rows.Next() {
-		err := rows.Scan(&name)
-		if err != nil {
-			return err
+// DBQueryWithValidationE queries from database and validate whether the result is the same as expected text. If not, return an error.
+func DBQueryWithValidationE(t *testing.T, db *sql.DB, command string, expected string) error {
+	return DBQueryWithCustomValidationE(t, db, command, func(rows *sql.Rows) bool {
+		var name string
+		for rows.Next() {
+			err := rows.Scan(&name)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if name != expected {
+				return false
+			}
 		}
-		if name != expected {
-			return validationFailed{actual: name, expected: expected}
-		}
+		return true
+	})
+}
+
+// DBQueryWithCustomValidation queries from database and validate whether the result meets the requirement. If there's any error, fail the test.
+func DBQueryWithCustomValidation(t *testing.T, db *sql.DB, command string, validateResponse func(*sql.Rows) bool) {
+	err := DBQueryWithCustomValidationE(t, db, command, validateResponse)
+	if err != nil {
+		t.Fatal(err)
 	}
+}
+
+// DBQueryWithCustomValidationE queries from database and validate whether the result meets the requirement. If not, return an error.
+func DBQueryWithCustomValidationE(t *testing.T, db *sql.DB, command string, validateResponse func(*sql.Rows) bool) error {
+	rows, err := DBQueryE(t, db, command)
 	defer rows.Close()
+	if err != nil {
+		return err
+	}
+	if !validateResponse(rows) {
+		return ValidationFunctionFailed{command}
+	}
 	return nil
 }
 
-// validationFailed is an error that occurs if the validation fails.
-type validationFailed struct {
-	actual   string
-	expected string
+// ValidationFunctionFailed is an error that occurs if the validation fails.
+type ValidationFunctionFailed struct {
+	command string
 }
 
-func (err validationFailed) Error() string {
-	return fmt.Sprintf("Validation failed: expected text is %s but actual text is %s.", err.expected, err.actual)
+func (err ValidationFunctionFailed) Error() string {
+	return fmt.Sprintf("Validation failed for command: %s.", err.command)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestTerraformDatabaseExample(t *testing.T) {
+func TestTerraformHttpExample(t *testing.T) {
 	t.Parallel()
 
 	terraformOptions := &terraform.Options{
@@ -40,29 +40,29 @@ func TestTerraformDatabaseExample(t *testing.T) {
 
 	// Verify that we can connect to the database and run SQL commands
 	retry.DoWithRetry(t, description, maxRetries, timeBetweenRetries, func() (string, error) {
-		// Connect to specific database, i.e. Microsoft SQL Database
-		db, err := dbConnectionE(t, "mssql", dbConfig)
+		// Connect to specific database, i.e. mssql
+		db, err := DBConnectionE(t, "mssql", dbConfig)
 		if err != nil {
 			return "", err
 		}
 
 		// Create a table
 		creation := "create table person (id integer, name varchar(30), primary key (id))"
-		dbExecution(t, db, creation)
+		DBExecution(t, db, creation)
 
 		// Insert a row
 		expectedID := 12345
 		expectedName := "azure"
 		insertion := fmt.Sprintf("insert into person values (%d, '%s')", expectedID, expectedName)
-		dbExecution(t, db, insertion)
+		DBExecution(t, db, insertion)
 
 		// Query the table and check the output
 		query := "select name from person"
-		dbQueryWithValidation(t, db, query, "azure")
+		DBQueryWithValidation(t, db, query, "azure")
 
 		// Drop the table
 		drop := "drop table person"
-		dbExecution(t, db, drop)
+		DBExecution(t, db, drop)
 		fmt.Println("Executed SQL commands correctly")
 
 		defer db.Close()
