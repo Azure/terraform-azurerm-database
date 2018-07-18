@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION=0.11.1
+ARG BUILD_TERRAFORM_VERSION=0.11.3
 FROM microsoft/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-database"
