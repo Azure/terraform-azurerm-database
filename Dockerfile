@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION=0.11.3
+ARG BUILD_TERRAFORM_VERSION=0.11.7
 FROM microsoft/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-database"
@@ -24,19 +24,17 @@ RUN mkdir /usr/src/${MODULE_NAME}
 COPY . /usr/src/${MODULE_NAME}
 WORKDIR /usr/src/${MODULE_NAME}
 
-# Install new version of terraform and golang
-RUN wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip >/dev/null 2>&1
-RUN unzip terraform_0.11.7_linux_amd64.zip >/dev/null
-RUN wget https://storage.googleapis.com/golang/go1.10.3.linux-amd64.tar.gz >/dev/null 2>&1
-RUN tar -zxvf go1.10.3.linux-amd64.tar.gz -C /usr/local/ >/dev/null
-RUN mv terraform /usr/local/bin
+# Set work directory
+RUN mkdir /go
+RUN mkdir /go/bin
+RUN mkdir /go/src
+RUN mkdir /go/src/${MODULE_NAME}
+COPY . /go/src/${MODULE_NAME}
+WORKDIR /go/src/${MODULE_NAME}
 
-# Install required go packages
-ENV GOPATH $HOME/terratest/sql
-ENV PATH /usr/local/go/bin:/usr/local/bin:/usr/bin
-RUN /bin/bash -c "go get github.com/denisenkom/go-mssqldb"
-RUN /bin/bash -c "go get github.com/gruntwork-io/terratest/modules/retry"
-RUN /bin/bash -c "go get github.com/gruntwork-io/terratest/modules/terraform"
-RUN /bin/bash -c "terraform version"
+# Install required go packages using dep ensure
+ENV GOPATH /go
+ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
+RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
 
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]

@@ -19,8 +19,14 @@ namespace :static do
 end
 
 namespace :integration do
+  task :ensure do
+    success = system ("dep ensure")
+    if not success 
+      raise "ERROR: Dep ensure failed!\n".red
+    end
+  end
   task :test do
-    success = system ("go test -v terratest/sql/terraform_database_example_test.go terratest/sql/database_functions.go")
+    success = system ("go test -v ./test/")
     if not success 
       raise "ERROR: Go test failed!\n".red
     end
@@ -37,7 +43,7 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => [ 'integration:test' ]
+task :e2e => [ 'integration:ensure', 'integration:test' ]
 
 task :default => [ 'build' ]
 
