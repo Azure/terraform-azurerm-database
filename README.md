@@ -80,19 +80,19 @@ $ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --buil
 This runs the build and unit tests:
 
 ```sh
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake build"
+$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake build"
 ```
 
 This runs the end to end tests:
 
 ```sh
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake e2e"
+$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake e2e"
 ```
 
 This runs the full tests:
 
 ```sh
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
+$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake full"
 ```
 
 ## Authors
