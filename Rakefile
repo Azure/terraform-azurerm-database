@@ -6,6 +6,16 @@ require 'rspec/core/rake_task'
 require 'bundler/setup'
 require 'terramodtest'
 
+namespace :presteps do
+  task :ensure do
+    puts "Using dep ensure to install required go packages.\n"
+    success = system ("dep ensure")
+    if not success 
+      raise "ERROR: Dep ensure failed!\n".red
+    end
+  end
+end
+
 namespace :static do
   task :style do
     style_tf
@@ -19,21 +29,15 @@ namespace :static do
 end
 
 namespace :integration do
-  task :ensure do
-    success = system ("dep ensure")
-    if not success 
-      raise "ERROR: Dep ensure failed!\n".red
-    end
-  end
   task :test do
-    success = system ("go test -v ./test/")
+    success = system ("go test -v ./test/ -timeout 20m")
     if not success 
       raise "ERROR: Go test failed!\n".red
     end
   end
 end
 
-task :prereqs => []
+task :prereqs => [ 'presteps:ensure' ]
 
 task :validate => [ 'static:style', 'static:lint' ]
 
@@ -43,7 +47,7 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => [ 'integration:ensure', 'integration:test' ]
+task :e2e => [ 'integration:test' ]
 
 task :default => [ 'build' ]
 
