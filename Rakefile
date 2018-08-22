@@ -47,7 +47,7 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => [ 'integration:test' ]
+task :e2e => [ 'prereqs', 'integration:test' ]
 
 task :default => [ 'build' ]
 
