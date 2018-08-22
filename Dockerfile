@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION="0.11.1"
+ARG BUILD_TERRAFORM_VERSION=0.11.7
 FROM microsoft/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-database"
@@ -22,6 +22,19 @@ ENV ARM_TEST_LOCATION_ALT=${BUILD_ARM_TEST_LOCATION_ALT}
 
 RUN mkdir /usr/src/${MODULE_NAME}
 COPY . /usr/src/${MODULE_NAME}
-
 WORKDIR /usr/src/${MODULE_NAME}
+
+# Set work directory
+RUN mkdir /go
+RUN mkdir /go/bin
+RUN mkdir /go/src
+RUN mkdir /go/src/${MODULE_NAME}
+COPY . /go/src/${MODULE_NAME}
+WORKDIR /go/src/${MODULE_NAME}
+
+# Install required go packages using dep ensure
+ENV GOPATH /go
+ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
+RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
+
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]

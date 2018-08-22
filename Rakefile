@@ -7,9 +7,12 @@ require 'bundler/setup'
 require 'terramodtest'
 
 namespace :presteps do
-  task :clean_up do
-    clean_up_kitchen
-    clean_up_terraform
+  task :ensure do
+    puts "Using dep ensure to install required go packages.\n"
+    success = system ("dep ensure")
+    if not success 
+      raise "ERROR: Dep ensure failed!\n".red
+    end
   end
 end
 
@@ -26,33 +29,15 @@ namespace :static do
 end
 
 namespace :integration do
-  task :converge do 
-    exit_code = `kitchen converge`
-    if exit_code != 0
-      raise "ERROR: Test kitchen converge failed! #{exit_code}\n"
-    end
-  end
-  task :verify do
-    exit_code = `kitchen verify`
-    if exit_code != 0
-      raise "ERROR: Test kitchen verify failed! #{exit_code}\n"
-    end
-  end
   task :test do
-    exit_code = `kitchen test`
-    if exit_code != 0
-      raise "ERROR: Test kitchen test failed! #{exit_code}\n"
-    end
-  end
-  task :destroy do
-    exit_code = `kitchen destroy`
-    if exit_code != 0
-      raise "ERROR: Test kitchen destroy failed! #{exit_code}\n"
+    success = system ("go test -v ./test/ -timeout 20m")
+    if not success 
+      raise "ERROR: Go test failed!\n".red
     end
   end
 end
 
-task :prereqs => [ 'presteps:clean_up' ]
+task :prereqs => [ 'presteps:ensure' ]
 
 task :validate => [ 'static:style', 'static:lint' ]
 
@@ -62,8 +47,8 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => [ 'integration:test' ]
+task :e2e => [ 'prereqs', 'integration:test' ]
 
 task :default => [ 'build' ]
 
-task :full => [ 'build', 'unit', 'e2e']
+task :full => [ 'build', 'unit', 'e2e' ]
