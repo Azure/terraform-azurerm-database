@@ -11,7 +11,8 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_sql_database" "db" {
-  name                             = "${var.db_name}"
+  count                            = "${length(var.db_names)}"
+  name                             = "${var.db_names[count.index]}"
   resource_group_name              = "${azurerm_resource_group.rg.name}"
   location                         = "${var.location}"
   edition                          = "${var.db_edition}"
@@ -33,7 +34,7 @@ resource "azurerm_sql_server" "server" {
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
-  name                = "${var.db_name}-fwrules"
+  name                = "${azurerm_sql_server.server.name}-fwrules"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   server_name         = "${azurerm_sql_server.server.name}"
   start_ip_address    = "${var.start_ip_address}"

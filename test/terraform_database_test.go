@@ -9,26 +9,8 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestTerraformDatabase(t *testing.T) {
-	t.Parallel()
-
-	terraformOptions := &terraform.Options{
-		// The path to where our Terraform code is located
-		TerraformDir: "./fixture",
-
-		// Variables to pass to our Terraform code using -var options
-		Vars: map[string]interface{}{},
-	}
-
-	// This will init and apply the resources and fail the test if there are any errors
-	terraform.InitAndApply(t, terraformOptions)
-
-	// Setting database configuration, including server name, user name, password and database name
-	var dbConfig DBConfig
-	dbConfig.server = terraform.Output(t, terraformOptions, "sql_server_fqdn")
-	dbConfig.user = terraform.Output(t, terraformOptions, "sql_admin_username")
-	dbConfig.password = terraform.Output(t, terraformOptions, "sql_password")
-	dbConfig.database = terraform.Output(t, terraformOptions, "database_name")
+func VerifyDB(t *testing.T, dbConfig DBConfig, db_name string) {
+	dbConfig.database = db_name
 
 	// It can take a minute or so for the database to boot up, so retry a few times
 	maxRetries := 15
@@ -66,6 +48,26 @@ func TestTerraformDatabase(t *testing.T) {
 
 		return "", nil
 	})
+
+}
+
+func TestTerraformDatabase(t *testing.T) {
+	t.Parallel()
+
+	var dbNames = []string{"testdb1", "testdb2"}
+
+	terraformOptions := &terraform.Options{
+		// The path to where our Terraform code is located
+		TerraformDir: "./fixture",
+
+		// Variables to pass to our Terraform code using -var options
+		Vars: map[string]interface{}{
+			"db_names": dbNames,
+		},
+	}
+
+	// This will init and apply the resources and fail the test if there are any errors
+	terraform.InitAndApply(t, terraformOptions)
 
 	// At the end of the test, clean up any resources that were created
 	terraform.Destroy(t, terraformOptions)

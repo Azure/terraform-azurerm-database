@@ -1,5 +1,5 @@
-output "database_name" {
-  value = "${module.sql-database.database_name}"
+output "database_names" {
+  value = "${module.sql-database.database_names}"
 }
 
 output "sql_server_name" {

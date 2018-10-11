@@ -1,6 +1,6 @@
-output "database_name" {
+output "database_names" {
   description = "Database name of the Azure SQL Database created."
-  value       = "${azurerm_sql_database.db.name}"
+  value       = "${azurerm_sql_database.db.*.name}"
 }
 
 output "sql_server_name" {
@@ -23,7 +23,11 @@ output "sql_server_fqdn" {
   value       = "${azurerm_sql_server.server.fully_qualified_domain_name}"
 }
 
+locals {
+  connection_string_fmt = "Server=tcp:${azurerm_sql_server.server.fully_qualified_domain_name},1433;Initial Catalog=%s;Persist Security Info=False;User ID=${azurerm_sql_server.server.administrator_login};Password=${azurerm_sql_server.server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+}
+
 output "connection_string" {
   description = "Connection string for the Azure SQL Database created."
-  value       = "Server=tcp:${azurerm_sql_server.server.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.db.name};Persist Security Info=False;User ID=${azurerm_sql_server.server.administrator_login};Password=${azurerm_sql_server.server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  value       = "${formatlist(local.connection_string_fmt, azurerm_sql_database.db.*.name)}"
 }

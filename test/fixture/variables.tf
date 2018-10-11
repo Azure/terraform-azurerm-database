@@ -10,8 +10,8 @@ variable "server_name" {
   default = "myserver"
 }
 
-variable "db_name" {
-  default = "mydatabase"
+variable "db_names" {
+  type = "list"
 }
 
 variable "sql_admin_username" {
