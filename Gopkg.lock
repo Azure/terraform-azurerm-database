@@ -11,7 +11,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fb4971cce8da66e5060d9f392ab341f4394daa4cbbfb7eb858f14e1ba41d58b9"
+  digest = "1:202ebf56814f6df353d5482c16d9feca8ea740e9ed7bf278259e8e4da307d3e5"
   name = "github.com/denisenkom/go-mssqldb"
   packages = [
     ".",
@@ -21,7 +21,7 @@
   revision = "242fa5aa1b45aeb9fcdfeee88822982e3f548e22"
 
 [[projects]]
-  digest = "1:517998a1f5034f85bdaf26c29f677f34509e772240e81f1ba9c2ba6eb0636981"
+  digest = "1:e9c6ba1df4e7953669dd5c2b13f6ce239ce2a7e76c498504368969b3eec87821"
   name = "github.com/gruntwork-io/terratest"
   packages = [
     "modules/collections",

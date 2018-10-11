@@ -6,6 +6,10 @@ variable "location" {
   default = "westus2"
 }
 
+variable "server_name" {
+  default = "myserver"
+}
+
 variable "db_name" {
   default = "mydatabase"
 }

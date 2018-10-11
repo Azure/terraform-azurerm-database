@@ -23,7 +23,7 @@ resource "azurerm_sql_database" "db" {
 }
 
 resource "azurerm_sql_server" "server" {
-  name                         = "${var.db_name}-sqlsvr"
+  name                         = "${var.server_name}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   location                     = "${var.location}"
   version                      = "${var.server_version}"
