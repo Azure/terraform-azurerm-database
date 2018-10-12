@@ -4,7 +4,7 @@
 
 ## Create an Azure SQL Database
 
-This Terraform module creates a basic Azure SQL Database.
+This Terraform module creates a set of Azure SQL Databases.
 
 ## Usage
 
@@ -13,7 +13,7 @@ module "sql-database" {
   source              = "Azure/database/azurerm"
   resource_group_name = "myapp"
   location            = "westus"
-  db_name             = "mydatabase"
+  db_names            = ["mydatabase1","mydatabase2"]
   sql_admin_username  = "mradministrator"
   sql_password        = "P@ssw0rd12345!"
 
