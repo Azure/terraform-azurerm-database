@@ -1,6 +1,6 @@
-# terraform-azurerm-database
+# terraform-azurerm-sqldatabase
 
-[![Build Status](https://travis-ci.org/Azure/terraform-azurerm-database.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-database)
+[![Build Status](https://travis-ci.org/Azure/terraform-azurerm-sqldatabase.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-sqldatabase)
 
 ## Create an Azure SQL Database
 
@@ -72,7 +72,7 @@ We provide a Dockerfile to build a new image based `FROM` the `microsoft/terrafo
 #### Build the image
 
 ```sh
-$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-database-module .
+$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-sqldatabase-module .
 ```
 
 #### Run test (Docker)
@@ -80,19 +80,19 @@ $ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --buil
 This runs the build and unit tests:
 
 ```sh
-$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake build"
+$ docker run --rm azure-sqldatabase-module /bin/bash -c "bundle install && rake build"
 ```
 
 This runs the end to end tests:
 
 ```sh
-$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake e2e"
+$ docker run --rm azure-sqldatabase-module /bin/bash -c "bundle install && rake e2e"
 ```
 
 This runs the full tests:
 
 ```sh
-$ docker run --rm azure-database-module /bin/bash -c "bundle install && rake full"
+$ docker run --rm azure-sqldatabase-module /bin/bash -c "bundle install && rake full"
 ```
 
 ## Authors

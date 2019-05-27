@@ -2,7 +2,7 @@
 ARG BUILD_TERRAFORM_VERSION=0.11.7
 FROM microsoft/terraform-test:${BUILD_TERRAFORM_VERSION}
 
-ARG MODULE_NAME="terraform-azurerm-database"
+ARG MODULE_NAME="terraform-azurerm-sqldatabase"
 
 # Declare default build configurations for terraform.
 ARG BUILD_ARM_SUBSCRIPTION_ID=""
