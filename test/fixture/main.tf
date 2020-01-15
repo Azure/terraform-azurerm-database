@@ -1,7 +1,3 @@
-provider "random" {
-  version = "~> 1.0"
-}
-
 resource "random_id" "name" {
   byte_length = 8
 }
