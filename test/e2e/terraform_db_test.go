@@ -1,34 +1,31 @@
-package test
+package e2e
 
 import (
 	"fmt"
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+
+	test_helper "github.com/Azure/terraform-module-test-helper"
 	"github.com/gruntwork-io/terratest/modules/retry"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
 func TestTerraformDatabase(t *testing.T) {
-	t.Parallel()
+	opt := terraform.Options{}
+	test_helper.RunE2ETest(t, "../../",
+		"examples/basic",
+		opt,
+		assertDbFunctional)
+}
 
-	terraformOptions := &terraform.Options{
-		// The path to where our Terraform code is located
-		TerraformDir: "./fixture",
-
-		// Variables to pass to our Terraform code using -var options
-		Vars: map[string]interface{}{},
-	}
-
-	// This will init and apply the resources and fail the test if there are any errors
-	terraform.InitAndApply(t, terraformOptions)
-
-	// Setting database configuration, including server name, user name, password and database name
+func assertDbFunctional(t *testing.T, output test_helper.TerraformOutput) {
 	var dbConfig DBConfig
-	dbConfig.server = terraform.Output(t, terraformOptions, "sql_server_fqdn")
-	dbConfig.user = terraform.Output(t, terraformOptions, "sql_admin_username")
-	dbConfig.password = terraform.Output(t, terraformOptions, "sql_password")
-	dbConfig.database = terraform.Output(t, terraformOptions, "database_name")
+	dbConfig.server = output["sql_server_fqdn"].(string)
+	dbConfig.user = output["sql_admin_username"].(string)
+	dbConfig.password = output["sql_password"].(string)
+	dbConfig.database = output["database_name"].(string)
 
 	// It can take a minute or so for the database to boot up, so retry a few times
 	maxRetries := 15
@@ -36,7 +33,7 @@ func TestTerraformDatabase(t *testing.T) {
 	description := fmt.Sprintf("Executing commands on database %s", dbConfig.server)
 
 	// Verify that we can connect to the database and run SQL commands
-	retry.DoWithRetry(t, description, maxRetries, timeBetweenRetries, func() (string, error) {
+	_, err := retry.DoWithRetryE(t, description, maxRetries, timeBetweenRetries, func() (string, error) {
 		// Connect to specific database, i.e. mssql
 		db, err := DBConnectionE(t, "mssql", dbConfig)
 		if err != nil {
@@ -62,11 +59,11 @@ func TestTerraformDatabase(t *testing.T) {
 		DBExecution(t, db, drop)
 		fmt.Println("Executed SQL commands correctly")
 
-		defer db.Close()
+		defer func() {
+			_ = db.Close()
+		}()
 
 		return "", nil
 	})
-
-	// At the end of the test, clean up any resources that were created
-	terraform.Destroy(t, terraformOptions)
+	assert.NoError(t, err)
 }
