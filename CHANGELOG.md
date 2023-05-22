@@ -5,6 +5,7 @@
 **Merged pull requests:**
 
 - Prepare fo new Ci pipeline [\#22](https://github.com/Azure/terraform-azurerm-database/pull/22) ([lonegunmanb](https://github.com/lonegunmanb))
+- Adding Microsoft SECURITY.MD [\#20](https://github.com/Azure/terraform-azurerm-database/pull/20) ([microsoft-github-policy-service[bot]](https://github.com/apps/microsoft-github-policy-service))
 
 
 
