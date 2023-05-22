@@ -1,6 +1,11 @@
-variable "resource_group_name" {
+variable "db_name" {
   type    = string
-  default = "mssqlResourceGroup"
+  default = "mydatabase"
+}
+
+variable "end_ip_address" {
+  type    = string
+  default = "255.255.255.255"
 }
 
 variable "location" {
@@ -8,9 +13,9 @@ variable "location" {
   default = "westeurope"
 }
 
-variable "db_name" {
+variable "resource_group_name" {
   type    = string
-  default = "mydatabase"
+  default = "mssqlResourceGroup"
 }
 
 variable "sql_admin_username" {
@@ -21,9 +26,4 @@ variable "sql_admin_username" {
 variable "start_ip_address" {
   type    = string
   default = "0.0.0.0"
-}
-
-variable "end_ip_address" {
-  type    = string
-  default = "255.255.255.255"
 }
