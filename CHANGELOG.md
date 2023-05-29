@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased](https://github.com/Azure/terraform-azurerm-database/tree/HEAD)
+## [v2.0.0](https://github.com/Azure/terraform-azurerm-database/tree/v2.0.0) (2023-05-28)
 
 **Merged pull requests:**
 
