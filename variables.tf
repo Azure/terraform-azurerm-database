@@ -55,6 +55,24 @@ variable "service_objective_name" {
   description = "The performance level for the database. For the list of acceptable values, see https://docs.microsoft.com/en-gb/azure/sql-database/sql-database-service-tiers. Default is Basic."
 }
 
+variable "sql_aad_administrator" {
+  type = object({
+    login                       = string
+    object_id                   = string
+    tenant_id                   = string
+    azuread_authentication_only = optional(bool)
+  })
+  default     = null
+  description = <<-EOF
+  object({
+    login = (Required) The login name of the principal to set as the server administrator
+    object_id = (Required) The ID of the principal to set as the server administrator
+    tenant_id = (Required) The Azure Tenant ID
+    azuread_authentication_only = (Optional) Specifies whether only AD Users and administrators can be used to login (`true`) or also local database users (`false`).
+  })
+EOF
+}
+
 variable "start_ip_address" {
   type        = string
   default     = "0.0.0.0"

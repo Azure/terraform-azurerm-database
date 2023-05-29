@@ -2,18 +2,25 @@ package e2e
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
 
 	test_helper "github.com/Azure/terraform-module-test-helper"
 	"github.com/gruntwork-io/terratest/modules/retry"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTerraformDatabase(t *testing.T) {
-	opt := terraform.Options{}
+	vars := make(map[string]any)
+	identityId := os.Getenv("MSI_ID")
+	if identityId != "" {
+		vars["msi_id"] = identityId
+	}
+	opt := terraform.Options{
+		Vars: vars,
+	}
 	test_helper.RunE2ETest(t, "../../",
 		"examples/basic",
 		opt,

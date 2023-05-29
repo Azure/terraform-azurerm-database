@@ -13,6 +13,11 @@ variable "location" {
   default = "westeurope"
 }
 
+variable "msi_id" {
+  type    = string
+  default = null
+}
+
 variable "resource_group_name" {
   type    = string
   default = "mssqlResourceGroup"
