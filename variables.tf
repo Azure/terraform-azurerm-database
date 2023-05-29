@@ -43,6 +43,56 @@ variable "end_ip_address" {
   description = "Defines the end IP address used in your database firewall rule."
 }
 
+variable "mssql_server_security_alert_policy_storage_account_access_key" {
+  type        = string
+  default     = null
+  description = "(Optional) Specifies the identifier key of the Threat Detection audit storage account. This is mandatory when you use storage_endpoint to specify a storage account blob endpoint."
+  sensitive   = true
+
+  validation {
+    condition     = var.mssql_server_security_alert_policy_storage_account_access_key == null || var.mssql_server_security_alert_policy_storage_account_access_key != ""
+    error_message = "`var.mssql_server_security_alert_policy_storage_account_access_key` must be `null` or non-empty string"
+  }
+}
+
+variable "mssql_server_vulnerability_assessment" {
+  type = object({
+    storage_container_path = string
+    security_alert_policy = object({
+      state                = string
+      disabled_alerts      = optional(set(string))
+      email_account_admins = optional(bool, false)
+      email_addresses      = optional(set(string))
+      retention_days       = optional(number, 0)
+      storage_endpoint     = optional(string)
+    })
+    recurring_scans = optional(object({
+      email_subscription_admins = optional(bool, false)
+      emails                    = optional(list(string))
+      enabled                   = optional(bool, false)
+    }))
+  })
+  default     = null
+  description = <<-EOT
+  object({
+    storage_container_path = (Required) A blob storage container path to hold the scan results (e.g. <https://example.blob.core.windows.net/VaScans/>).
+    security_alert_policy = object({
+      state                = (Required) Specifies the state of the policy, whether it is enabled or disabled or a policy has not been applied yet on the specific database server. Possible values are `Disabled`, `Enabled` and `New`.
+      disabled_alerts      = (Optional) Specifies an array of alerts that are disabled. Allowed values are: `Sql_Injection`, `Sql_Injection_Vulnerability`, `Access_Anomaly`, `Data_Exfiltration`, `Unsafe_Action`.
+      email_account_admins = (Optional) Boolean flag which specifies if the alert is sent to the account administrators or not. Defaults to `false`.
+      email_addresses      = (Optional) Specifies an array of email addresses to which the alert is sent.
+      retention_days       = (Optional) Specifies the number of days to keep in the Threat Detection audit logs. Defaults to `0`.
+      storage_endpoint     = (Optional) Specifies the blob storage endpoint (e.g. <https://example.blob.core.windows.net>). This blob storage will hold all Threat Detection audit logs.
+    })
+    recurring_scans = optional(object({
+      email_subscription_admins = (Optional) Boolean flag which specifies if the schedule scan notification will be sent to the subscription administrators. Defaults to `false`.
+      emails                    = (Optional) Specifies an array of email addresses to which the scan notification is sent.
+      enabled                   = (Optional) Boolean flag which specifies if recurring scans is enabled or disabled. Defaults to `false`.
+    }))
+  })
+EOT
+}
+
 variable "resource_group_name" {
   type        = string
   default     = "myapp-rg"

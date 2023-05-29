@@ -13,6 +13,20 @@ resource "azurerm_resource_group" "rg" {
 
 data "azurerm_client_config" "current" {}
 
+resource "azurerm_storage_account" "example" {
+  name                     = "accteststorageaccount"
+  resource_group_name      = azurerm_resource_group.example.name
+  location                 = azurerm_resource_group.example.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+}
+
+resource "azurerm_storage_container" "example" {
+  name                  = "accteststoragecontainer"
+  storage_account_name  = azurerm_storage_account.example.name
+  container_access_type = "private"
+}
+
 module "sql_database" {
   source                = "../.."
   create_resource_group = false

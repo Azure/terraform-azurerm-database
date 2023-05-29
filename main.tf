@@ -46,7 +46,6 @@ resource "azurerm_sql_database" "db" {
 }
 
 resource "azurerm_sql_server" "server" {
-  #checkov:skip=CKV2_AZURE_2:We don't change tf config for now
   #checkov:skip=CKV_AZURE_24:We don't change tf config for now
   #checkov:skip=CKV_AZURE_23:We don't change tf config for now
   #checkov:skip=CKV2_AZURE_6:We don't change tf config for now
@@ -86,4 +85,56 @@ resource "azurerm_sql_active_directory_administrator" "aad_admin" {
   server_name                 = azurerm_sql_server.server.name
   tenant_id                   = var.sql_aad_administrator.tenant_id
   azuread_authentication_only = var.sql_aad_administrator.azuread_authentication_only
+}
+
+variable "mssql_server_vulnerability_assessment_storage_account_key" {
+  type = object({
+    access_key = optional(string)
+    sas_key    = optional(string)
+  })
+  sensitive   = true
+  description = <<-EOT
+  object({
+    access_key =  (Optional) Specifies the identifier key of the storage account for vulnerability assessment scan results. If `storage_container_sas_key` isn't specified, `storage_account_access_key` is required. The `access_key` only applies if the storage account is not behind a virtual network or a firewall.
+    sas_key = (Optional) A shared access signature (SAS Key) that has write access to the blob container specified in `storage_container_path` parameter. If `storage_account_access_key` isn't specified, `storage_container_sas_key` is required. The `sas_key` only applies if the storage account is not behind a virtual network or a firewall.
+  })
+EOT
+  default     = null
+  validation {
+    condition     = var.mssql_server_vulnerability_assessment_storage_account_key == null ? true : var.mssql_server_vulnerability_assessment_storage_account_key.access_key != null || var.mssql_server_vulnerability_assessment_storage_account_key.sas_key != null
+    error_message = "`var.mssql_server_security_alert_policy_storage_account_access_key` must be `null`, otherwise one of `access_key` or `sas_key` must be set."
+  }
+}
+
+resource "azurerm_mssql_server_security_alert_policy" "this" {
+  count = var.mssql_server_vulnerability_assessment == null ? 0 : 1
+
+  resource_group_name        = azurerm_sql_server.server.resource_group_name
+  server_name                = azurerm_sql_server.server.name
+  state                      = var.mssql_server_vulnerability_assessment.security_alert_policy.state
+  disabled_alerts            = var.mssql_server_vulnerability_assessment.security_alert_policy.disabled_alerts
+  email_account_admins       = var.mssql_server_vulnerability_assessment.security_alert_policy.email_account_admins
+  email_addresses            = var.mssql_server_vulnerability_assessment.security_alert_policy.email_addresses
+  retention_days             = var.mssql_server_vulnerability_assessment.security_alert_policy.retention_days
+  storage_account_access_key = var.mssql_server_security_alert_policy_storage_account_access_key
+  storage_endpoint           = var.mssql_server_vulnerability_assessment.security_alert_policy.storage_endpoint
+}
+
+resource "azurerm_mssql_server_vulnerability_assessment" "this" {
+  count = var.mssql_server_vulnerability_assessment == null ? 0 : 1
+
+  server_security_alert_policy_id = azurerm_mssql_server_security_alert_policy.this.id
+  storage_container_path          = var.mssql_server_vulnerability_assessment.storage_container_path
+  storage_account_access_key      = try(var.mssql_server_vulnerability_assessment_storage_account_key.access_key, null)
+  storage_container_sas_key       = try(var.mssql_server_vulnerability_assessment_storage_account_key.sas_key, null)
+
+  dynamic "recurring_scans" {
+    for_each = var.mssql_server_vulnerability_assessment.recurring_scans == null ? [] : ["recurring_scans"]
+
+    content {
+      email_subscription_admins = var.mssql_server_vulnerability_assessment.recurring_scans.email_subscription_admins
+      emails                    = var.mssql_server_vulnerability_assessment.recurring_scans.emails
+      enabled                   = var.mssql_server_vulnerability_assessment.recurring_scans.enabled
+    }
+  }
 }
