@@ -6,15 +6,21 @@ resource "random_password" "password" {
   length = 20
 }
 
+resource "azurerm_resource_group" "rg" {
+  location = var.location
+  name     = "${var.resource_group_name}-${random_id.name.hex}"
+}
+
 data "azurerm_client_config" "current" {}
 
 module "sql_database" {
-  source              = "../.."
-  resource_group_name = "${var.resource_group_name}-${random_id.name.hex}"
-  location            = var.location
-  db_name             = "${var.db_name}-${random_id.name.hex}"
-  sql_admin_username  = var.sql_admin_username
-  sql_password        = random_password.password.result
+  source                = "../.."
+  create_resource_group = false
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  db_name               = "${var.db_name}-${random_id.name.hex}"
+  sql_admin_username    = var.sql_admin_username
+  sql_password          = random_password.password.result
   sql_aad_administrator = {
     login     = "sqladmin"
     tenant_id = data.azurerm_client_config.current.tenant_id
