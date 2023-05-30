@@ -25,6 +25,12 @@ variable "collation" {
   description = "The collation for the database. Default is SQL_Latin1_General_CP1_CI_AS"
 }
 
+variable "create_resource_group" {
+  type        = bool
+  default     = true
+  description = "Create a new resource group with name `var.resource_group_name`, or just use it as resource group's name. Default to `true`. Changing this forces a new resource to be created."
+}
+
 variable "db_edition" {
   type        = string
   default     = "Basic"
