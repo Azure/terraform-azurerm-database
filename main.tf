@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "rg" {
     avm_git_org              = "Azure"
     avm_git_repo             = "terraform-azurerm-database"
     avm_yor_trace            = "44b1d744-f34e-422b-91d8-3d853bc3645b"
-    } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
     avm_yor_name = "rg"
   } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
@@ -40,13 +40,12 @@ resource "azurerm_sql_database" "db" {
     avm_git_org              = "Azure"
     avm_git_repo             = "terraform-azurerm-database"
     avm_yor_trace            = "fbbc3e92-f5fc-4173-bd85-58423189e5d8"
-    } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
     avm_yor_name = "db"
   } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 resource "azurerm_sql_server" "server" {
-  #checkov:skip=CKV2_AZURE_2:We don't change tf config for now
   #checkov:skip=CKV_AZURE_24:We don't change tf config for now
   #checkov:skip=CKV_AZURE_23:We don't change tf config for now
   #checkov:skip=CKV2_AZURE_6:We don't change tf config for now
@@ -63,7 +62,7 @@ resource "azurerm_sql_server" "server" {
     avm_git_org              = "Azure"
     avm_git_repo             = "terraform-azurerm-database"
     avm_yor_trace            = "53033ef9-ced3-4a5f-a17b-d56cf9817bea"
-    } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/), (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
     avm_yor_name = "server"
   } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
@@ -86,4 +85,44 @@ resource "azurerm_sql_active_directory_administrator" "aad_admin" {
   server_name                 = azurerm_sql_server.server.name
   tenant_id                   = var.sql_aad_administrator.tenant_id
   azuread_authentication_only = var.sql_aad_administrator.azuread_authentication_only
+}
+
+resource "azurerm_mssql_server_security_alert_policy" "this" {
+  for_each = var.mssql_server_security_alert_policies
+
+  resource_group_name        = local.resource_group_name
+  server_name                = azurerm_sql_server.server.name
+  state                      = each.value.state
+  disabled_alerts            = each.value.disabled_alerts
+  email_account_admins       = each.value.email_account_admins
+  email_addresses            = each.value.email_addresses
+  retention_days             = each.value.retention_days
+  storage_account_access_key = lookup(var.mssql_server_security_alert_policy_storage_account_access_keys, each.key, null)
+  storage_endpoint           = each.value.storage_endpoint
+
+  lifecycle {
+    precondition {
+      condition     = each.value.storage_endpoint == null || try(var.mssql_server_security_alert_policy_storage_account_access_keys[each.key], null) != null
+      error_message = "Once `storage_endpoint` has been set, a corresponding `var.mssql_server_security_alert_policy_storage_account_access_keys` record must be set too."
+    }
+  }
+}
+
+resource "azurerm_mssql_server_vulnerability_assessment" "this" {
+  for_each = local.vulnerability_assessments
+
+  server_security_alert_policy_id = azurerm_mssql_server_security_alert_policy.this[split("_", each.key)[0]].id
+  storage_container_path          = each.value.storage_container_path
+  storage_account_access_key      = try(var.mssql_server_vulnerability_assessment_storage_account_keys[each.key].access_key, null)
+  storage_container_sas_key       = try(var.mssql_server_vulnerability_assessment_storage_account_keys[each.key].sas_key, null)
+
+  dynamic "recurring_scans" {
+    for_each = each.value.recurring_scans == null ? [] : ["recurring_scans"]
+
+    content {
+      email_subscription_admins = each.value.recurring_scans.email_subscription_admins
+      emails                    = each.value.recurring_scans.emails
+      enabled                   = each.value.recurring_scans.enabled
+    }
+  }
 }
