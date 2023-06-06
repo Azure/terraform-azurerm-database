@@ -6,7 +6,7 @@ require (
 	github.com/Azure/terraform-module-test-helper v0.14.0
 	github.com/denisenkom/go-mssqldb v0.12.3
 	github.com/gruntwork-io/terratest v0.42.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 )
 
 require (
