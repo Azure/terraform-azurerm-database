@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Bump google.golang.org/grpc from 1.51.0 to 1.53.0 in /test [\#37](https://github.com/Azure/terraform-azurerm-database/pull/37) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/Azure/terraform-module-test-helper from 0.13.0 to 0.14.0 in /test [\#33](https://github.com/Azure/terraform-azurerm-database/pull/33) ([dependabot[bot]](https://github.com/apps/dependabot))
 - New variable to control whether to create the resource group or not. [\#30](https://github.com/Azure/terraform-azurerm-database/pull/30) ([lonegunmanb](https://github.com/lonegunmanb))
 - Ensure SQL servers can configure Azure Active Directory admin [\#26](https://github.com/Azure/terraform-azurerm-database/pull/26) ([lonegunmanb](https://github.com/lonegunmanb))
