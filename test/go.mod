@@ -3,9 +3,9 @@ module github.com/Azure/terraform-azurerm-database
 go 1.20
 
 require (
-	github.com/Azure/terraform-module-test-helper v0.15.0
+	github.com/Azure/terraform-module-test-helper v0.16.0
 	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/gruntwork-io/terratest v0.43.8
+	github.com/gruntwork-io/terratest v0.43.9
 	github.com/stretchr/testify v1.8.4
 )
 
