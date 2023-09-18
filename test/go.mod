@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/Azure/terraform-module-test-helper v0.15.0
 	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/gruntwork-io/terratest v0.43.8
+	github.com/gruntwork-io/terratest v0.44.0
 	github.com/stretchr/testify v1.8.4
 )
 
