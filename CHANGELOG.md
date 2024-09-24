@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Use oidc as e2e test authentication method [\#55](https://github.com/Azure/terraform-azurerm-database/pull/55) ([lonegunmanb](https://github.com/lonegunmanb))
 - Bump github.com/Azure/terraform-module-test-helper from 0.14.0 to 0.15.0 in /test [\#40](https://github.com/Azure/terraform-azurerm-database/pull/40) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump google.golang.org/grpc from 1.51.0 to 1.53.0 in /test [\#37](https://github.com/Azure/terraform-azurerm-database/pull/37) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/Azure/terraform-module-test-helper from 0.13.0 to 0.14.0 in /test [\#33](https://github.com/Azure/terraform-azurerm-database/pull/33) ([dependabot[bot]](https://github.com/apps/dependabot))
