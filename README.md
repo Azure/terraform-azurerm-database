@@ -1,3 +1,6 @@
+> [!WARNING]
+> This module is no longer maintained, please consider migrating to [Azure Verified Modules](https://aka.ms/avm).
+
 # terraform-azurerm-database
 
 ## Create an Azure SQL Database
