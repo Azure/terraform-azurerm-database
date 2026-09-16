@@ -1,5 +1,5 @@
 > [!WARNING]
-> This module is no longer maintained, please consider migrating to [Azure Verified Modules](https://aka.ms/avm).
+> This module has been archived and won't receive any further updates, please consider migration to [Azure Verified Modules](https://aka.ms/avm).
 
 # terraform-azurerm-database
 
